@@ -1,7 +1,9 @@
 package com.sky.mapper;
 
+import com.sky.anno.AutoFill;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
+import com.sky.enumeration.OperationType;
 
 import java.util.List;
 
@@ -24,13 +26,14 @@ public interface EmployeeMapper {
     @Insert("insert into employee(name,username,password,phone,sex,id_number,status,create_time,update_time,create_user,update_user) "
             + "values" +
             "(#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{status},#{createTime},#{updateTime},#{createUser},#{updateUser})")
+    @AutoFill(value = OperationType.INSERT)
     void insert(Employee employee);
 
-    @Select("select count(*) from employee")
-    long total();
+    Long total(EmployeePageQueryDTO employeePageQueryDTO);
 
     List<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 
+    @AutoFill(value = OperationType.UPDATE)
     void update(Employee employee);
 
     @Select("select * from employee where id = #{id}")

@@ -51,4 +51,16 @@
                 </set>
                 where id = #{id}
         </update>
+
+        <!-- total --> 
+
+        <select id="total" resultType="java.lang.Long">
+                SELECT count(*)
+                FROM employee
+                <where>
+                        <if test="name != null and name!=''">
+                                name like concat('%',#{name},'%')
+                        </if>
+                </where>
+        </select>
 </mapper>

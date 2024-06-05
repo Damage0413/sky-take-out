@@ -13,10 +13,12 @@ public class DishPageQueryDTO implements Serializable {
 
     private String name;
 
-    //分类id
+    // 分类id
     private Integer categoryId;
 
-    //状态 0表示禁用 1表示启用
+    // 状态 0表示禁用 1表示启用
     private Integer status;
 
+    // 分页查询开始的位置
+    private int start;
 }
