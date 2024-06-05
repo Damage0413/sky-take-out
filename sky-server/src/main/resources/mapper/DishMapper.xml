@@ -91,4 +91,13 @@
         </set>
         where id = #{id}
     </update>
+
+    <!-- getDishsByCategoryId --> 
+
+    <select id="getDishsByCategoryId" resultType="com.sky.entity.Dish">
+        SELECT *
+        FROM dish
+        where category_id = #{categoryId} and status = 1
+        ORDER BY create_time
+    </select>
 </mapper>

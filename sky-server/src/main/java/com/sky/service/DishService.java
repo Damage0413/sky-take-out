@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.vo.DishVO;
 
@@ -20,5 +21,7 @@ public interface DishService {
     DishVO getById(Long id);
 
     void updateDishStatus(Integer status, Long id);
+
+    List<Dish> getDishsByCategoryId(Long id);
 
 }

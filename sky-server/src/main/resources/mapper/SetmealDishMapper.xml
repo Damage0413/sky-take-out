@@ -46,4 +46,29 @@
         </set>
         where id = #{id}
     </update>
+
+    <!-- insertDishs --> 
+
+    <insert id="insertDishs">
+        insert into setmeal_dish(setmeal_id,dish_id,name,price,copies)
+        values
+        <foreach collection="setmealDishs" item="setmealDish" separator=",">
+            (#{setmealDish.setmealId},#{setmealDish.dishId},#{setmealDish.name},#{setmealDish.price},#{setmealDish.copies})
+        </foreach>
+    </insert>
+
+    <!-- deleteBySetmealIds --> 
+
+    <delete id="deleteBySetmealIds">
+        DELETE FROM setmeal_dish where setmeal_id in 
+        <foreach collection="ids" index="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- getBySetmealId --> 
+
+    <select id="getBySetmealId" resultType="com.sky.entity.SetmealDish">
+        SELECT * FROM setmeal_dish WHERE setmeal_id = #{id}
+    </select>
 </mapper>
