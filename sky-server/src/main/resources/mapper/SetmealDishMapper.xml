@@ -71,4 +71,5 @@
     <select id="getBySetmealId" resultType="com.sky.entity.SetmealDish">
         SELECT * FROM setmeal_dish WHERE setmeal_id = #{id}
     </select>
+
 </mapper>
