@@ -3,6 +3,7 @@ package com.sky.controller.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ public class DishController {
 
     @PostMapping
     @ApiOperation("添加菜品操作")
+    @CacheEvict(cacheNames = "dish", key = "#dishDTO.categoryId")
     public Result<String> insertDish(@RequestBody DishDTO dishDTO) {
         dishService.insertDish(dishDTO);
         log.info("新增菜品");
@@ -50,6 +52,7 @@ public class DishController {
 
     @DeleteMapping
     @ApiOperation("删除菜品操作")
+    @CacheEvict(cacheNames = "dish", allEntries = true)
     public Result<String> deleteByIds(@RequestParam List<Long> ids) {
         dishService.deleteByIds(ids);
         return Result.success();
@@ -57,6 +60,7 @@ public class DishController {
 
     @PutMapping
     @ApiOperation("修改菜品操作")
+    @CacheEvict(cacheNames = "dish", allEntries = true)
     public Result<String> updateDishWithFlavor(@RequestBody DishDTO dishDTO) {
         dishService.updateDishWithFlavor(dishDTO);
         return Result.success();
@@ -71,6 +75,7 @@ public class DishController {
 
     @PostMapping("/status/{status}")
     @ApiOperation("修改菜品状态操作")
+    @CacheEvict(cacheNames = "dish", allEntries = true)
     public Result<String> updateDishStatus(@PathVariable Integer status, Long id) {
         dishService.updateDishStatus(status, id);
         return Result.success();
@@ -81,6 +86,6 @@ public class DishController {
     public Result<List<Dish>> getDishsByCategoryId(Long categoryId) {
         List<Dish> dishlist = dishService.getDishsByCategoryId(categoryId);
         return Result.success(dishlist);
-
     }
+
 }
