@@ -13,4 +13,7 @@ public interface UserMapper {
 
     void insert(User user);
 
+    @Select("SELECT * FROM user WHERE id = #{userId}")
+    User getById(Long userId);
+
 }
