@@ -44,4 +44,72 @@
         </set>
         where id = #{id}
     </update>
+
+    <!-- total --> 
+
+    <select id="total" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM orders
+        <where>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </where>
+        LIMIT #{start},#{pageSize}
+    </select>
+
+    <!-- page --> 
+
+    <select id="page" resultType="com.sky.entity.Orders">
+        SELECT * FROM orders
+        <where>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </where>
+        ORDER BY order_time desc
+        LIMIT #{start},#{pageSize}
+    </select>
+
+    <!-- totalByadmin --> 
+
+    <select id="totalByadmin" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM orders
+        <where>
+            <if test="number != null">
+                number = #{number}
+            </if>
+            <if test="phone != null">
+                and phone like concat('%',#{phone},'%')
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and order_time between #{beginTime} and #{endTime}
+            </if>
+        </where>
+        LIMIT #{start},#{pageSize}
+    </select>
+
+    <!-- pageByadmin --> 
+
+    <select id="pageByadmin" resultType="com.sky.entity.Orders">
+        SELECT * FROM orders
+        <where>
+            <if test="number != null">
+                number = #{number}
+            </if>
+            <if test="phone != null">
+                and phone like concat('%',#{phone},'%')
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and order_time between #{beginTime} and #{endTime}
+            </if>
+        </where>
+        ORDER BY order_time desc
+        LIMIT #{start},#{pageSize}
+    </select>
 </mapper>
