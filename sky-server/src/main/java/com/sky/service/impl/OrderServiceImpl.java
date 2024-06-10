@@ -1,9 +1,10 @@
 package com.sky.service.impl;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.OrdersCancelDTO;
@@ -38,6 +40,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,6 +58,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ShoppingCartMapper shoppingCartMapper;
+
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Override
     @Transactional
@@ -76,8 +82,8 @@ public class OrderServiceImpl implements OrderService {
         BeanUtils.copyProperties(ordersSubmitDTO, orders);
         orders.setUserId(BaseContext.getCurrentId());
         orders.setOrderTime(LocalDateTime.now());
-        orders.setStatus(Orders.PAID);
-        orders.setPayStatus(Orders.PENDING_PAYMENT);
+        orders.setStatus(Orders.TO_BE_CONFIRMED);
+        orders.setPayStatus(Orders.PAID);
         orders.setNumber(String.valueOf(System.currentTimeMillis()));
         orders.setPhone(address.getPhone());
         orders.setConsignee(address.getConsignee());
@@ -99,6 +105,16 @@ public class OrderServiceImpl implements OrderService {
         orderSubmitVO.setOrderAmount(orders.getAmount());
         orderSubmitVO.setOrderNumber(orders.getNumber());
         orderSubmitVO.setOrderTime(orders.getOrderTime());
+
+        // 由于没有支付权限，在下单时直接设置数据库状态为支付成功的状态
+        // 所以订单提醒的实现也放在了下单部分的代码在
+        Map map = new HashMap();
+        map.put("type", 1);
+        map.put("orderId", orders.getId());
+        map.put("content", "订单号：" + orders.getNumber());
+
+        String jsonString = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(jsonString);
         return orderSubmitVO;
     }
 
@@ -362,5 +378,21 @@ public class OrderServiceImpl implements OrderService {
         orders.setDeliveryTime(LocalDateTime.now());
 
         orderMapper.update(orders);
+    }
+
+    @Override
+    public void reminder(Long id) {
+        Orders orders = orderMapper.getById(id);
+        if (orders == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        Map map = new HashMap();
+        map.put("type", 2);
+        map.put("orderId", id);
+        map.put("content", "订单号：" + orders.getNumber());
+
+        String jsonString = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(jsonString);
+
     }
 }

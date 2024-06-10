@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -41,5 +42,11 @@ public interface OrderMapper {
 
     @Select("select count(id) from orders where status = #{status}")
     Integer countStatus(Integer status);
+
+    @Select("select * from orders where status = 1 and order_time < #{orderTime}")
+    List<Orders> getTimeoutOrder(LocalDateTime orderTime);
+
+    @Select("select * from orders where status = 4 and order_time < #{orderTime}")
+    List<Orders> getDeliveryOrder(LocalDateTime orderTime);
 
 }
