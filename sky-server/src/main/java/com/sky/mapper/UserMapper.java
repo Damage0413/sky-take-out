@@ -1,5 +1,7 @@
 package com.sky.mapper;
 
+import java.time.LocalDateTime;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -15,5 +17,7 @@ public interface UserMapper {
 
     @Select("SELECT * FROM user WHERE id = #{userId}")
     User getById(Long userId);
+
+    Integer countByDateTime(LocalDateTime beginTime, LocalDateTime endTime);
 
 }

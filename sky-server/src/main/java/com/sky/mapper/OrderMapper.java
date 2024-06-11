@@ -49,4 +49,9 @@ public interface OrderMapper {
     @Select("select * from orders where status = 4 and order_time < #{orderTime}")
     List<Orders> getDeliveryOrder(LocalDateTime orderTime);
 
+    @Select("select sum(amount) from orders where order_time between #{beginTime} and #{endTime} and status = 5")
+    Double sumByData(LocalDateTime beginTime, LocalDateTime endTime);
+
+    Integer countByDateatime(LocalDateTime beginTime, LocalDateTime endTime, Integer status);
+
 }
