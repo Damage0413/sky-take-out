@@ -2,6 +2,8 @@ package com.sky.service;
 
 import java.time.LocalDate;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.sky.vo.OrderReportVO;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
@@ -16,5 +18,7 @@ public interface ReportService {
     OrderReportVO ordersStatistics(LocalDate begin, LocalDate end);
 
     SalesTop10ReportVO salesTop10ReportVO(LocalDate begin, LocalDate end);
+
+    void export(HttpServletResponse response);
 
 }

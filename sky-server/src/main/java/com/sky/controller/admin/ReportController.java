@@ -2,6 +2,8 @@ package com.sky.controller.admin;
 
 import java.time.LocalDate;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,5 +62,10 @@ public class ReportController {
         log.info("销量统计，{}-{}", begin, end);
         SalesTop10ReportVO salesTop10ReportVO = reportService.salesTop10ReportVO(begin, end);
         return Result.success(salesTop10ReportVO);
+    }
+
+    @GetMapping("/export")
+    public void export(HttpServletResponse response) {
+        reportService.export(response);
     }
 }
